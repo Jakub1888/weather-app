@@ -1,0 +1,5 @@
+<mat-card>
+  <p>{{ country.name }}</p>
+  <div *ngIf="showDetails"></div>
+  <button (click)="onShowDetails()">Show Details</button>
+</mat-card>

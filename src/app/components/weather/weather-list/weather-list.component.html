@@ -1,0 +1,8 @@
+<mat-tab-group>
+  <ng-container *ngFor="let day of weekdays; let i = index">
+    <mat-tab label="{{ day }}">
+      <app-weather-day [day]="daysArr[i]"></app-weather-day>
+    </mat-tab>
+  </ng-container>
+</mat-tab-group>
+<div></div>

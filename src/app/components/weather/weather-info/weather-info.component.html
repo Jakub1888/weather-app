@@ -1,0 +1,19 @@
+<form [formGroup]="searchForm" (ngSubmit)="searchForm.valid && onSubmit()">
+  <input type="text" formControlName="city" />
+  <button type="submit">Search</button>
+</form>
+
+<h1 *ngIf="weather$ | async as weatherData">
+  {{ weatherData.city.name | titlecase }}
+</h1>
+
+<app-weather-list
+  *ngIf="weather$ | async as weatherData; else noWeather"
+  [weatherDays]="weatherData"
+></app-weather-list>
+
+<ng-template #noWeather>Search for a Weather by city</ng-template>
+
+<div *ngIf="errorMessage">
+  {{ errorMessage }}
+</div>

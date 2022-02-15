@@ -1,0 +1,28 @@
+.app-wrapper {
+  width: 100%;
+  background-color: rgb(247, 247, 247);
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+.app-inner {
+  width: 1200px;
+  height: 100vh;
+  background-color: #fff;
+}
+
+h1 {
+  padding-top: 2em;
+  font-size: 4em;
+  font-weight: 800;
+}
+
+.spacer {
+  flex: 1 1 auto;
+}
+
+@media only screen and (max-width: 1199px) {
+  .app-inner {
+    width: 100%;
+  }
+}
