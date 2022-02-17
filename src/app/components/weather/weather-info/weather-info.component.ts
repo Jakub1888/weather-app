@@ -1,20 +1,22 @@
-import { AfterViewChecked, Component, Input, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { EMPTY, Observable } from 'rxjs';
+import { EMPTY, Observable, Subject } from 'rxjs';
 import { catchError, map, tap } from 'rxjs/operators';
 import { WeatherService } from 'src/app/services/weather.service';
-import { WeatherInfo } from 'src/app/_models/weather.model';
 
 @Component({
   selector: 'app-weather-info',
   templateUrl: './weather-info.component.html',
   styleUrls: ['./weather-info.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherInfoComponent implements OnInit {
   searchForm!: FormGroup;
   weather$!: Observable<any>;
-  countryName: string = '';
-  errorMessage!: string;
+  sunriseSunsetTime;
+
+  private errorMessageSubject = new Subject<any>();
+  errorMessage$ = this.errorMessageSubject.asObservable();
 
   constructor(
     private weatherService: WeatherService,
@@ -30,8 +32,16 @@ export class WeatherInfoComponent implements OnInit {
       this.weather$ = this.weatherService
         .getWeather(this.searchForm.value.city)
         .pipe(
+          tap(
+            (weatherData) =>
+              (this.sunriseSunsetTime = {
+                sunrise: new Date(weatherData.city.sunrise * 1000),
+                sunset: new Date(weatherData.city.sunset * 1000),
+              })
+          ),
           catchError((err) => {
-            this.errorMessage = err.statusText;
+            this.errorMessageSubject.next(err);
+            console.error(err);
             return EMPTY;
           })
         );

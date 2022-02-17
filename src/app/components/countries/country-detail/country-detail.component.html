@@ -1,25 +1,18 @@
-<!--<div *ngIf="country$ | async as country; else loading">
-  <h1>{{ country.name }}</h1>
-  <em>{{ country.nativeName }}</em>
+<mat-card *ngIf="country$ | async as country" class="country-detail">
+  <mat-card-title>
+    {{ country.name }}
+  </mat-card-title>
+  <mat-card-subtitle> Capital: {{ country.capital }} </mat-card-subtitle>
 
-  <h2>Weather</h2>
+  <h2>Weather in {{ country.capital }}</h2>
+
+  <app-weather-list
+    *ngIf="weather$ | async as weatherData; else loading"
+    [weatherDays]="weatherData"
+  ></app-weather-list>
+
+  <ng-template #loading> Loading... </ng-template>
 
   <h2>Select weather by city:</h2>
   <button type="button" routerLink="/weather">click</button>
-</div>
-
-<ng-template #loading> Loading... </ng-template>
-<div *ngIf="errorMessage">
-  {{ errorMessage }}
-</div>-->
-
-<div *ngIf="country$ | async as country">
-  <p>{{ country.name }}</p>
-</div>
-
-<app-weather-list
-  *ngIf="weather$ | async as weatherData; else noWeather"
-  [weatherDays]="weatherData"
-></app-weather-list>
-
-<ng-template #noWeather>No weather data was found for this country</ng-template>
+</mat-card>

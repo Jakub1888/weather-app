@@ -3,17 +3,22 @@
   <button type="submit">Search</button>
 </form>
 
-<h1 *ngIf="weather$ | async as weatherData">
-  {{ weatherData.city.name | titlecase }}
-</h1>
+<div *ngIf="weather$ | async as weatherData">
+  <h1>
+    {{ weatherData.city.name | titlecase }}
+  </h1>
 
-<app-weather-list
-  *ngIf="weather$ | async as weatherData; else noWeather"
-  [weatherDays]="weatherData"
-></app-weather-list>
+  {{ sunriseSunsetTime.sunrise | date: "h:mm:ss a" }}
+  {{ sunriseSunsetTime.sunset | date: "h:mm:ss a" }}
 
-<ng-template #noWeather>Search for a Weather by city</ng-template>
+  <app-weather-list
+    *ngIf="weatherData; else noWeather"
+    [weatherDays]="weatherData"
+  ></app-weather-list>
 
-<div *ngIf="errorMessage">
-  {{ errorMessage }}
+  <ng-template #noWeather>Search for a Weather by city</ng-template>
+</div>
+
+<div *ngIf="errorMessage$ | async as errorMessage">
+  {{ errorMessage.error.message }}
 </div>

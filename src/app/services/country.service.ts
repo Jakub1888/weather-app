@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { combineLatest, Observable, Subject, throwError } from 'rxjs';
-import { catchError, map, tap } from 'rxjs/operators';
+import { catchError, map, shareReplay, tap } from 'rxjs/operators';
 import { Country } from '../_models/country.model';
 
 @Injectable({
@@ -17,11 +17,17 @@ export class CountryService {
         ...country,
       }))
     ),
+
+    shareReplay(1),
+
     catchError(this.handleError)
   );
 
   private countrySelectedSubject = new Subject<number>();
   countrySelectedAction$ = this.countrySelectedSubject.asObservable();
+
+  private errorMessageSubject = new Subject<string>();
+  errorMessage$ = this.errorMessageSubject.asObservable();
 
   selectedCountry$ = combineLatest([
     this.countries$,
@@ -34,17 +40,12 @@ export class CountryService {
 
   constructor(private http: HttpClient) {}
 
-  getCountry(countryName: string): Observable<any> {
-    return this.http
-      .get<Country[]>(`${this.base_url}/name/${countryName}`)
-      .pipe(
-        map((c) => c[0]),
-        catchError(this.handleError)
-      );
-  }
-
   selectedCountryChanged(selectedCountryId: number) {
     this.countrySelectedSubject.next(selectedCountryId);
+  }
+
+  setError(err) {
+    this.errorMessageSubject.next(err);
   }
 
   private handleError(err: any): Observable<never> {
@@ -52,8 +53,6 @@ export class CountryService {
     if (err instanceof ErrorEvent) {
       errorMessage = `An error occured: ${err.message}`;
     } else {
-      console.error(err);
-
       errorMessage = `Backend error ${err.status}: ${err.message}`;
     }
     console.error(err);

@@ -14,7 +14,5 @@ export class CountryCardComponent implements OnInit {
 
   ngOnInit(): void {}
 
-  onShowDetails() {
-    this.showDetails = !this.showDetails;
-  }
+  onShowDetails() {}
 }

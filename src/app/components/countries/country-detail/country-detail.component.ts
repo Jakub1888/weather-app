@@ -1,6 +1,6 @@
-import { Component } from '@angular/core';
-import { EMPTY, Observable } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { CountryService } from 'src/app/services/country.service';
 import { WeatherService } from 'src/app/services/weather.service';
 import { WeatherInfo } from 'src/app/_models/weather.model';
@@ -9,11 +9,10 @@ import { WeatherInfo } from 'src/app/_models/weather.model';
   selector: 'app-country-detail',
   templateUrl: './country-detail.component.html',
   styleUrls: ['./country-detail.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CountryDetailComponent {
-  countryName!: any;
-  weather$!: Observable<WeatherInfo[]>;
-  errorMessage = '';
+  weather$!: Observable<WeatherInfo>;
 
   constructor(
     private countryService: CountryService,
@@ -21,10 +20,8 @@ export class CountryDetailComponent {
   ) {}
 
   country$ = this.countryService.selectedCountry$.pipe(
-    catchError((err) => {
-      this.errorMessage = err;
-      return EMPTY;
-    }),
-    tap((data) => (this.weather$ = this.weatherService.getWeather(data?.name)))
+    tap(
+      (data) => (this.weather$ = this.weatherService.getWeather(data?.capital))
+    )
   );
 }

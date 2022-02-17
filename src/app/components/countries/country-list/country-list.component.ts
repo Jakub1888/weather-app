@@ -10,17 +10,17 @@ import { Country } from '../../../_models/country.model';
   styleUrls: ['./country-list.component.scss'],
 })
 export class CountryListComponent {
-  errorMessage = '';
   searchCountry: string = '';
   @ViewChildren('filteredCountries') filteredCountries!: Country[];
   filtered: number = 21;
+  selectedCountry$ = this.CountryService.selectedCountry$;
+  errorMessage$ = this.CountryService.errorMessage$;
 
   constructor(private CountryService: CountryService) {}
 
   countries$ = this.CountryService.countries$.pipe(
-    //tap((data) => console.log(data)),
     catchError((err) => {
-      this.errorMessage = err;
+      this.CountryService.setError(err);
       return EMPTY;
     })
   );

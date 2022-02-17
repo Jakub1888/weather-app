@@ -1,14 +1,22 @@
-import { Component, Input, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  OnInit,
+} from '@angular/core';
+import { List } from 'src/app/_models/weather.model';
 
 @Component({
   selector: 'app-weather-list',
   templateUrl: './weather-list.component.html',
   styleUrls: ['./weather-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class WeatherListComponent implements OnInit {
   @Input() weatherDays: any;
+  sunriseSunset = {};
   weekdays: string[] = [];
-  daysArr: any = [];
+  daysArr: any[] = [];
 
   constructor() {}
 

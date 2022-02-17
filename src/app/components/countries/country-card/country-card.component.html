@@ -1,5 +1,5 @@
 <mat-card>
-  <p>{{ country.name }}</p>
-  <div *ngIf="showDetails"></div>
-  <button (click)="onShowDetails()">Show Details</button>
+  <h2>{{ country.name }}</h2>
+
+  <img src="{{ country.flag }}" alt="{{ country.name }} flag" />
 </mat-card>

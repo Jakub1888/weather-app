@@ -1,4 +1,6 @@
-<div class="country-list-wrapper">
+<div class="countries-wrapper">
+  <h1>Countries List</h1>
+
   <mat-form-field appearance="outline" class="search-bar">
     <mat-label>Country Search</mat-label>
     <input
@@ -9,26 +11,31 @@
     />
   </mat-form-field>
 
-  <div *ngIf="countries$ | async as countries">
-    <div
-      #filteredCountries
-      *ngFor="let country of countries | countriesFilter: searchCountry"
-    >
-      <app-country-card
-        *ngIf="filtered !== 0 && !(filtered > 20)"
-        [country]="country"
-        (click)="onSelected(country.id)"
-      ></app-country-card>
+  <div class="countries-inner">
+    <div *ngIf="countries$ | async as countries" class="inner-cards">
+      <ng-container
+        #filteredCountries
+        *ngFor="let country of countries | countriesFilter: searchCountry"
+      >
+        <div [ngClass]="{ disabled: (selectedCountry$ | async) === country }">
+          <app-country-card
+            *ngIf="filtered !== 0 && !(filtered > 20)"
+            [country]="country"
+            [ngClass]="{ active: (selectedCountry$ | async) === country }"
+            (click)="selectedCountry$ && onSelected(country.id)"
+          ></app-country-card>
+        </div>
+      </ng-container>
+    </div>
+
+    <div class="inner-detail">
+      <app-country-detail></app-country-detail>
     </div>
   </div>
 
-  <div *ngIf="searchCountry === '' || filtered === 0 || filtered > 20">
-    <h3>Search for a country</h3>
+  <!--<div *ngIf="searchCountry === '' || filtered === 0 || filtered > 20"></div>-->
+
+  <div *ngIf="errorMessage$ | async as errorMessage">
+    {{ errorMessage }}
   </div>
-</div>
-
-<app-country-detail></app-country-detail>
-
-<div *ngIf="errorMessage">
-  {{ errorMessage }}
 </div>
